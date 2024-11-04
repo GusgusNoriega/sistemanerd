@@ -65,3 +65,5 @@ class CreateUser extends Command
         return 0;
     }
 }
+
+/*forma de usa php artisan make:user*/

@@ -16,3 +16,12 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+
+Route::middleware('auth.token')->get('/verify-token', function () {
+    return response()->json(['status' => 'Token válido'], 200);
+});
+// Ruta protegida para la página de inicio
+Route::get('/inicio', function () {
+    return view('pages.home');
+});
