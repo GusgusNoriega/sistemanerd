@@ -17,11 +17,10 @@ use App\Http\Controllers\UserController;
 */
 
 Route::middleware('auth:api')->group(function () {
-    
-    // Otras rutas protegidas
+    Route::get('/user-data/{id}', [UserController::class, 'getUserData']);
 });
 
-Route::get('/user-data/{id}', [UserController::class, 'getUserData']);
+
 
 Route::post('/login', [AuthController::class, 'login']);
 

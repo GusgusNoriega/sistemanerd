@@ -22,6 +22,9 @@
         </form>
     
         <p id="message"></p>
+
+        <button id="accessProtectedRoute">Acceder a Datos del Usuario</button>
+        <div id="userData"></div>
     
         <script>
             document.getElementById('loginForm').addEventListener('submit', async (e) => {
@@ -61,6 +64,63 @@
                     console.error('Error:', error);
                 }
             });
+
+            document.getElementById('accessProtectedRoute').addEventListener('click', function() {
+                // Recuperar el token de acceso desde localStorage
+                const token = sessionStorage.getItem('tokennerd');
+                const url = 'http://sistemanerd.test/api/user-data/1';
+                
+                // Verificar que el token existe
+                if (!token) {
+                    alert('No se encontró un token de acceso. Por favor, inicia sesión primero.');
+                    return;
+                }
+
+                // Realizar la solicitud a la ruta protegida
+                obtenerJSON(url, token)
+                    .then(resultado => {
+                        console.log(resultado); // Muestra el resultado en la consola
+                        displayUserData(resultado);
+                    })
+                    .catch(error => {
+                        console.error('Error al ejecutar la petición:', error);
+                    });
+            });
+
+           
+
+            async function obtenerJSON(url, token) {
+                try {
+                        const response = await fetch(url, {
+                            method: 'GET', // 'GET' es el método por defecto, puedes omitir esta línea si deseas
+                            headers: {
+                                'Authorization': `Bearer ${token}`,
+                                'Content-Type': 'application/json', // Opcional, dependiendo de tu API
+                            },
+                        });
+
+                        if (!response.ok) {
+                            throw new Error(`Error en la petición: ${response.status} ${response.statusText}`);
+                        }
+
+                        const data = await response.json();
+                        return data; // Devuelve solo el JSON de la respuesta
+                    } catch (error) {
+                        console.error('Error al obtener el JSON:', error);
+                        throw error; // Puedes manejar el error según tus necesidades
+                    }
+            }
+
+            function displayUserData(user) {
+                const userDataDiv = document.getElementById('userData');
+                userDataDiv.innerHTML = `
+                    <h2>Datos del Usuario</h2>
+                    <p><strong>ID:</strong> ${user.id}</p>
+                    <p><strong>Nombre:</strong> ${user.name}</p>
+                    <p><strong>Email:</strong> ${user.email}</p>
+                    <!-- Añade más campos según sea necesario -->
+                `;
+            }
         </script>
     </body>
 </html>
